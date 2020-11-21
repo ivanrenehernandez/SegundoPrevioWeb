@@ -1,6 +1,8 @@
 package co.rene.tienda.controller;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,18 +41,13 @@ public class LoginController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Cliente cliente = clienteDao.findByField("email", request.getParameter("email"));
-		if (cliente != null) {
-			request.getRequestDispatcher("index.jsp").forward(request, response);
-		}
 		Tienda tienda  = tiendaDao.findByField("email", request.getParameter("email"));
 		if (tienda != null) {
-			request.getSession().setAttribute("nombredetienda", tienda.getNombre());
-			request.getSession().setAttribute("mensajeservicios", tienda.getServicios().size() > 0 ? "" : "No hay servicios registrados");
-			request.getSession().setAttribute("servicios", tienda.getServicios());
-			request.getRequestDispatcher("servicios.jsp").forward(request, response);
+			request.getSession().setAttribute("tienda", tienda);
+			response.sendRedirect("/SegundoPrevio/tienda?action=misservicios");
+			return;
 		}
-		request.getRequestDispatcher("index.jsp").forward(request, response);
+		response.sendRedirect("/SegundoPrevio/");
 	}
 
 }

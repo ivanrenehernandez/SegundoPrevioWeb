@@ -20,18 +20,21 @@ import co.rene.tienda.model.Tienda;
 public class TiendaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TiendaDao tiendaDao = new TiendaDao();
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public TiendaController() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public TiendaController() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		try {
 			String path = request.getServletPath();
 			String action = request.getParameter("action");
@@ -41,32 +44,39 @@ public class TiendaController extends HttpServlet {
 				break;
 			case "servicios":
 				listarServicios(request, response);
+				break;
+			case "misservicios":
+				misServicios(request, response);
+				break;
 			default:
-				List <Tienda> tiendas = tiendaDao.list();;
-				request.getSession().setAttribute("tiendas", tiendas);	
-				request.getRequestDispatcher("index.jsp").forward(request, response);
+				response.sendRedirect("/SegundoPrevio/");
 			}
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
 	}
 
-	private void listarServicios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void listarServicios(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		Tienda tienda = tiendaDao.find(id);
 		if (tienda != null) {
 			request.getSession().setAttribute("nombredetienda", tienda.getNombre());
-			request.getSession().setAttribute("mensajeservicios", tienda.getServicios().size() > 0 ? "" : "No hay servicios registrados");
+			request.getSession().setAttribute("mensajeservicios",
+					tienda.getServicios().size() > 0 ? "" : "No hay servicios registrados");
 			request.getSession().setAttribute("servicios", tienda.getServicios());
-			request.getRequestDispatcher("servicios.jsp").forward(request, response);			
+			request.getRequestDispatcher("servicios.jsp").forward(request, response);
+			return;
 		}
-		
+		response.sendRedirect("/SegundoPrevio/");
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		try {
 			String path = request.getServletPath();
 			String action = request.getParameter("action");
@@ -75,17 +85,28 @@ public class TiendaController extends HttpServlet {
 				registrarTienda(request, response);
 				break;
 			default:
-				List <Tienda> tiendas = tiendaDao.list();;
-				request.getSession().setAttribute("tiendas", tiendas);	
-				request.getRequestDispatcher("index.jsp").forward(request, response);
+				response.sendRedirect("/SegundoPrevio/");
 			}
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
 	}
 
-	private void registrarTienda(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Tienda tienda= new Tienda();
+	private void misServicios(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		System.out.print("---------------------------");
+		Tienda tienda = (Tienda) request.getSession().getAttribute("tienda");
+		request.getSession().setAttribute("nombredetienda", tienda.getNombre());
+		request.getSession().setAttribute("mensajeservicios",
+				tienda.getServicios().size() > 0 ? "" : "No hay servicios registrados");
+		request.getSession().setAttribute("servicios", tienda.getServicios());
+		request.getRequestDispatcher("servicios.jsp").forward(request, response);
+		return;
+	}
+
+	private void registrarTienda(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Tienda tienda = new Tienda();
 		tienda.setClave(request.getParameter("clave"));
 		tienda.setDescripcion(request.getParameter("descripcion"));
 		tienda.setEmail(request.getParameter("email"));
@@ -100,10 +121,8 @@ public class TiendaController extends HttpServlet {
 			tiendaDao.insert(tienda);
 			request.getRequestDispatcher("login.jsp").forward(request, response);
 		} else {
-			request.getRequestDispatcher("index.jsp").forward(request, response);
+			response.sendRedirect("/SegundoPrevio/");
 		}
 	}
-	
-	
 
 }

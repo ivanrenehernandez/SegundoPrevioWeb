@@ -70,20 +70,19 @@
 											<ul class="list-inline">
 												<li class="list-inline-item"><a
 													class="social-icon text-xs-center" target="_blank"
-													href="<c:out value="${tienda.facebook}" />"> <i
+													href="${tienda.facebook}"> <i
 														class="fa fa-facebook"></i>
 												</a></li>
 												<li class="list-inline-item"><a
 													class="social-icon text-xs-center" target="_blank"
-													href="<c:out value="${tienda.web}" />"> <i
+													href="${tienda.web}"> <i
 														class="fa fa-share"></i>
 												</a></li>
 												<li class="list-inline-item"><a
 													class="social-icon text-xs-center" target="_blank"
-													href="tienda?action=servicios&id=${tienda.id} }"> <i
+													href="tienda?action=servicios&id=${tienda.id}"> <i
 														class="fa fa-info-circle"></i>
 												</a></li>
-
 											</ul>
 										</div>
 									</div>
