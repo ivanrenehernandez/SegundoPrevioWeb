@@ -97,8 +97,12 @@ public class TiendaController extends HttpServlet {
 		System.out.print("---------------------------");
 		Tienda tienda = (Tienda) request.getSession().getAttribute("tienda");
 		request.getSession().setAttribute("nombredetienda", tienda.getNombre());
-		request.getSession().setAttribute("mensajeservicios",
-				tienda.getServicios().size() > 0 ? "" : "No hay servicios registrados");
+		if (tienda.getServicios() != null) {
+			request.getSession().setAttribute("mensajeservicios",
+					tienda.getServicios().size() > 0 ? "" : "No hay servicios registrados");			
+		} else {
+			request.getSession().setAttribute("mensajeservicios", "No hay servicios registrados");
+		}
 		request.getSession().setAttribute("servicios", tienda.getServicios());
 		request.getRequestDispatcher("servicios.jsp").forward(request, response);
 		return;
